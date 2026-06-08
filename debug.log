@@ -1,0 +1,81 @@
++ set -euo pipefail
++ APP=opencode
++ MUTED='\033[0;2m'
++ RED='\033[0;31m'
++ ORANGE='\033[38;5;214m'
++ NC='\033[0m'
++ requested_version=
++ no_modify_path=false
++ binary_path=
++ [[ 0 -gt 0 ]]
++ INSTALL_DIR=/home/ubuntu/.opencode/bin
++ mkdir -p /home/ubuntu/.opencode/bin
++ '[' -n '' ']'
+++ uname -s
++ raw_os=Linux
+++ echo Linux
+++ tr '[:upper:]' '[:lower:]'
++ os=linux
++ case "$raw_os" in
++ os=linux
+++ uname -m
++ arch=x86_64
++ [[ x86_64 == \a\a\r\c\h\6\4 ]]
++ [[ x86_64 == \x\8\6\_\6\4 ]]
++ arch=x64
++ '[' linux = darwin ']'
++ combo=linux-x64
++ case "$combo" in
++ archive_ext=.zip
++ '[' linux = linux ']'
++ archive_ext=.tar.gz
++ is_musl=false
++ '[' linux = linux ']'
++ '[' -f /etc/alpine-release ']'
++ command -v ldd
++ ldd --version
++ grep -qi musl
++ needs_baseline=false
++ '[' x64 = x64 ']'
++ '[' linux = linux ']'
++ grep -qwi avx2 /proc/cpuinfo
++ '[' linux = darwin ']'
++ '[' linux = windows ']'
++ target=linux-x64
++ '[' false = true ']'
++ '[' false = true ']'
++ filename=opencode-linux-x64.tar.gz
++ '[' linux = linux ']'
++ command -v tar
++ '[' -z '' ']'
++ url=https://github.com/anomalyco/opencode/releases/latest/download/opencode-linux-x64.tar.gz
+++ sed -n 's/.*"tag_name": *"v\([^"]*\)".*/\1/p'
+++ curl -s https://api.github.com/repos/anomalyco/opencode/releases/latest
++ specific_version=1.16.2
++ [[ 0 -ne 0 ]]
++ [[ -z 1.16.2 ]]
++ '[' -n '' ']'
++ check_version
++ command -v opencode
++ download_and_install
++ print_message info '\n\033[0;2mInstalling \033[0mopencode \033[0;2mversion: \033[0m1.16.2'
++ local level=info
++ local 'message=\n\033[0;2mInstalling \033[0mopencode \033[0;2mversion: \033[0m1.16.2'
++ local color=
++ case $level in
++ color='\033[0m'
++ echo -e '\033[0m\n\033[0;2mInstalling \033[0mopencode \033[0;2mversion: \033[0m1.16.2\033[0m'
+[0m
+[0;2mInstalling [0mopencode [0;2mversion: [0m1.16.2[0m
++ local tmp_dir=/tmp/opencode_install_1572489
++ mkdir -p /tmp/opencode_install_1572489
++ [[ linux == \w\i\n\d\o\w\s ]]
++ '[' -t 2 ']'
++ curl -# -L -o /tmp/opencode_install_1572489/opencode-linux-x64.tar.gz https://github.com/anomalyco/opencode/releases/latest/download/opencode-linux-x64.tar.gz
+##O=-#    #                                                                                                                                                                 #=#=- #      #                                                                                                                                                              -#O=#    #      #                                                                                                                                                           -=#=-#     #       #                                                                                                                                                        -=O#-   #     #        #                                                                                                                                                    -=O=-#    #      #        #                                                                                                                                                 -=O=- #      #       #        #                                                                                                                                             -=O=-    #      #       #          #                                                                                                                                        -=O=-      #       #        #          #                                                                                                                                    -=O=-         #        #        #           #                                                                                                                               ##################################################################################################################################################################### 100.0%
++ '[' linux = linux ']'
++ tar -xzf /tmp/opencode_install_1572489/opencode-linux-x64.tar.gz -C /tmp/opencode_install_1572489
+
+gzip: stdin: not in gzip format
+tar: Child returned status 1
+tar: Error is not recoverable: exiting now
