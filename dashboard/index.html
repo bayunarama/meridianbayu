@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meridian DLMM LP Dashboard</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Custom Styling -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <div class="logo-text">
+        <h1>Meridian</h1>
+        <span>DLMM LP AGENT</span>
+      </div>
+    </div>
+    
+    <div class="status-widgets">
+      <div class="widget-badge" id="bot-mode-badge">
+        <span class="pulse-dot"></span>
+        <span id="bot-mode-text">DRY RUN</span>
+      </div>
+      
+      <div class="status-widget">
+        <span class="widget-label">SOL Price</span>
+        <span class="widget-val" id="sol-price-text">$0.00</span>
+      </div>
+      
+      <div class="status-widget">
+        <span class="widget-label">Wallet Balance</span>
+        <span class="widget-val" id="wallet-balance-text">0.00 SOL</span>
+      </div>
+      
+      <button class="btn btn-primary" id="btn-run-screening">
+        <i class="fa-solid fa-magnifying-glass animate-search"></i> Run Screening
+      </button>
+    </div>
+  </header>
+
+  <main class="app-container">
+    
+    <!-- Top Stats Bar -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon pnl-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+        <div class="stat-info">
+          <h3>Total PnL</h3>
+          <p class="stat-value" id="stat-total-pnl">$0.00</p>
+          <span class="stat-sub" id="stat-avg-pnl-pct">Avg PnL: 0.00%</span>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon winrate-icon"><i class="fa-solid fa-trophy"></i></div>
+        <div class="stat-info">
+          <h3>Win Rate</h3>
+          <p class="stat-value" id="stat-winrate">0%</p>
+          <span class="stat-sub" id="stat-closed-count">0 positions closed</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon active-icon"><i class="fa-solid fa-briefcase"></i></div>
+        <div class="stat-info">
+          <h3>Active Positions</h3>
+          <p class="stat-value" id="stat-active-positions">0</p>
+          <span class="stat-sub" id="stat-open-value">Value: $0.00</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon fees-icon"><i class="fa-solid fa-coins"></i></div>
+        <div class="stat-info">
+          <h3>Simulated Fees</h3>
+          <p class="stat-value" id="stat-total-fees">$0.00</p>
+          <span class="stat-sub" id="stat-avg-efficiency">Efficiency: 0.00%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Workspace Grid -->
+    <div class="workspace-grid">
+      
+      <!-- Left Panel: Active Positions -->
+      <section class="panel positions-panel">
+        <div class="panel-header">
+          <h2><i class="fa-solid fa-wave-square"></i> Open Positions</h2>
+          <span class="badge" id="active-positions-badge">0</span>
+        </div>
+        <div class="panel-body">
+          <div class="positions-list" id="active-positions-list">
+            <!-- Loading Indicator -->
+            <div class="loader-container">
+              <div class="loader"></div>
+              <p>Fetching active positions...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Panel: Charts and Metrics -->
+      <section class="panel charts-panel">
+        <div class="panel-header tab-header">
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="tab-pnl"><i class="fa-solid fa-chart-area"></i> Cumulative PnL</button>
+            <button class="tab-btn" data-tab="tab-strategies"><i class="fa-solid fa-pie-chart"></i> Strategies</button>
+            <button class="tab-btn" data-tab="tab-exits"><i class="fa-solid fa-door-open"></i> Exit Reasons</button>
+          </div>
+        </div>
+        <div class="panel-body chart-body">
+          <div class="tab-content active" id="tab-pnl">
+            <canvas id="chart-pnl"></canvas>
+          </div>
+          <div class="tab-content" id="tab-strategies">
+            <div class="chart-wrapper">
+              <canvas id="chart-strategies"></canvas>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-exits">
+            <div class="chart-wrapper">
+              <canvas id="chart-exits"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Bottom Panels: Tabs Section -->
+    <div class="sub-tabs-container">
+      <div class="sub-tabs-header">
+        <button class="sub-tab-btn active" data-subtab="subtab-history"><i class="fa-solid fa-history"></i> Trade History</button>
+        <button class="sub-tab-btn" data-subtab="subtab-decisions"><i class="fa-solid fa-clipboard-list"></i> Decision Log</button>
+        <button class="sub-tab-btn" data-subtab="subtab-config"><i class="fa-solid fa-sliders"></i> Config Thresholds</button>
+        <button class="sub-tab-btn" data-subtab="subtab-logs"><i class="fa-solid fa-terminal"></i> Console Logs</button>
+      </div>
+
+      <div class="sub-tabs-body">
+        
+        <!-- Tab: Trade History -->
+        <div class="sub-tab-content active" id="subtab-history">
+          <div class="filter-bar">
+            <div class="search-input">
+              <i class="fa-solid fa-search"></i>
+              <input type="text" id="history-search" placeholder="Search pool name or symbol...">
+            </div>
+            <div class="filter-selects">
+              <select id="history-filter-strategy">
+                <option value="">All Strategies</option>
+                <option value="spot">Spot</option>
+                <option value="curve">Curve</option>
+                <option value="bid_ask">Bid/Ask</option>
+              </select>
+              <select id="history-filter-reason">
+                <option value="">All Exit Reasons</option>
+                <option value="stop_loss">Stop Loss</option>
+                <option value="trailing_tp">Trailing Take Profit</option>
+                <option value="out_of_range">Out of Range</option>
+                <option value="low_yield">Low Yield</option>
+                <option value="manual">Manual Close</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table" id="history-table">
+              <thead>
+                <tr>
+                  <th>Pair</th>
+                  <th>Strategy</th>
+                  <th>Amt (SOL)</th>
+                  <th>Unrealized (USD)</th>
+                  <th>Fees Earned</th>
+                  <th>PnL ($)</th>
+                  <th>PnL (%)</th>
+                  <th>Duration</th>
+                  <th>Closed Date</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody id="history-table-body">
+                <tr>
+                  <td colspan="10" class="text-center">No trade history yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab: Decision Log -->
+        <div class="sub-tab-content" id="subtab-decisions">
+          <div class="timeline" id="decision-timeline">
+            <div class="text-center pad-20">No decisions logged yet.</div>
+          </div>
+        </div>
+
+        <!-- Tab: Config Thresholds -->
+        <div class="sub-tab-content" id="subtab-config">
+          <div class="config-grid" id="config-settings-grid">
+            <div class="text-center pad-20">Loading configuration...</div>
+          </div>
+        </div>
+
+        <!-- Tab: Console Logs -->
+        <div class="sub-tab-content" id="subtab-logs">
+          <div class="console-box">
+            <div class="console-header">
+              <span><i class="fa-solid fa-circle"></i> agent-running.log</span>
+              <button class="btn btn-sm btn-secondary" id="btn-refresh-logs"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+            </div>
+            <div class="console-body" id="console-logs-body">
+              <!-- Logs will be loaded here -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Position Action Modal -->
+  <div class="modal" id="position-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-position-title">Position Details</h3>
+        <span class="close-modal" id="btn-close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="position-details-grid">
+          <div class="detail-group">
+            <span class="detail-label">Position Address</span>
+            <span class="detail-value mono" id="detail-position-address">-</span>
+          </div>
+          <div class="detail-group">
+            <span class="detail-label">Pool Address</span>
+            <span class="detail-value mono" id="detail-pool-address">-</span>
+          </div>
+          <div class="detail-group">
+            <span class="detail-label">Strategy Type</span>
+            <span class="detail-value" id="detail-strategy">-</span>
+          </div>
+          <div class="detail-group">
+            <span class="detail-label">Bin Range Coverage</span>
+            <span class="detail-value" id="detail-bin-range">-</span>
+          </div>
+          <div class="detail-group">
+            <span class="detail-label">Age / Held Time</span>
+            <span class="detail-value" id="detail-age">-</span>
+          </div>
+          <div class="detail-group">
+            <span class="detail-label">Initial Amount</span>
+            <span class="detail-value" id="detail-initial">-</span>
+          </div>
+        </div>
+        
+        <div class="instruction-form">
+          <label for="position-instruction">Instruction Note / Take Profit Target</label>
+          <textarea id="position-instruction" placeholder="e.g., exit if PnL reaches 10%, or hold until next recheck..."></textarea>
+          <button class="btn btn-secondary" id="btn-save-instruction">Save Instruction</button>
+        </div>
+
+        <div class="danger-zone">
+          <h4>Danger Zone</h4>
+          <p>Instantly close liquidity position simulated in dry run and swap base tokens back to SOL.</p>
+          <div class="close-action-bar">
+            <input type="text" id="close-reason-input" placeholder="e.g., manual override, pool volatility too high...">
+            <button class="btn btn-danger" id="btn-close-position-action">Close Position</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast" id="toast">
+    <i class="fa-solid fa-check-circle"></i>
+    <span id="toast-message">Success!</span>
+  </div>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 Meridian DLMM Agent System. Crafted with premium web aesthetics.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
