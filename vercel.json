@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "buildCommand": false,
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/dashboard.html" }
+  ]
+}
